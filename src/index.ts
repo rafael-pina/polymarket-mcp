@@ -1,14 +1,37 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
 // API endpoints
 const GAMMA_API_BASE = "https://gamma-api.polymarket.com";
 const CLOB_API_BASE = "https://clob.polymarket.com";
 
+// Load categories data
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const categoriesPath = join(__dirname, "categories.json");
+const categoriesData = JSON.parse(readFileSync(categoriesPath, "utf-8"));
+
 // =============================================================================
 // Types
 // =============================================================================
+
+interface CategoryConfig {
+  label: string;
+  description: string;
+  tags: string[];
+  apiCategory: string;
+}
+
+interface CategoriesData {
+  categories: Record<string, CategoryConfig>;
+  allTags: Array<{ id: string; label: string; slug: string }>;
+}
+
+const CATEGORIES: CategoriesData = categoriesData;
 
 interface Market {
   id: string;
@@ -33,6 +56,13 @@ interface Market {
   bestBid: string;
   bestAsk: string;
   spread: string;
+  category?: string;
+}
+
+interface EventTag {
+  id: string;
+  label: string;
+  slug: string;
 }
 
 interface Event {
@@ -49,7 +79,7 @@ interface Event {
   endDate: string;
   closed: boolean;
   markets: Market[];
-  tags: string[];
+  tags: EventTag[];
 }
 
 interface PricePoint {
@@ -126,7 +156,7 @@ async function searchMarkets(params: {
   // Fetch a larger set and filter client-side since Gamma API doesn't have great search
   const searchParams = new URLSearchParams();
   searchParams.set("limit", "100");
-  
+
   if (params.active !== undefined) {
     searchParams.set("active", params.active.toString());
   }
@@ -148,9 +178,9 @@ async function searchMarkets(params: {
 
   const markets = data as Market[];
   const queryLower = params.query.toLowerCase();
-  
+
   // Filter by query matching question or description
-  const filtered = markets.filter(m => 
+  const filtered = markets.filter(m =>
     m.question?.toLowerCase().includes(queryLower) ||
     m.description?.toLowerCase().includes(queryLower)
   );
@@ -210,6 +240,97 @@ async function fetchEventBySlug(slug: string): Promise<Event | null> {
   return null;
 }
 
+function getCategoryKeywords(categoryKey: string): { tags: string[]; apiCategory: string } | null {
+  const category = CATEGORIES.categories[categoryKey.toLowerCase()];
+  if (category) {
+    return { tags: category.tags, apiCategory: category.apiCategory };
+  }
+  return null;
+}
+
+function matchesCategory(event: Event, categoryKey: string): boolean {
+  const categoryConfig = getCategoryKeywords(categoryKey);
+  if (!categoryConfig) return false;
+
+  // Check if event category matches
+  if (event.category?.toLowerCase() === categoryConfig.apiCategory.toLowerCase()) {
+    return true;
+  }
+
+  // Check if any event tags match our category tags
+  if (event.tags && Array.isArray(event.tags)) {
+    for (const tag of event.tags) {
+      const tagSlug = typeof tag === "string" ? tag : tag.slug;
+      if (categoryConfig.tags.includes(tagSlug)) {
+        return true;
+      }
+    }
+  }
+
+  // Check title/description for category-related keywords
+  const titleLower = event.title?.toLowerCase() || "";
+  const descLower = event.description?.toLowerCase() || "";
+
+  // Add some common keyword matching for better results
+  const categoryKeywords: Record<string, string[]> = {
+    politics: ["election", "president", "congress", "senate", "vote", "democrat", "republican", "trump", "biden", "harris", "governor", "political"],
+    crypto: ["bitcoin", "btc", "ethereum", "eth", "crypto", "token", "blockchain", "defi", "nft", "solana", "usdt", "tether"],
+    sports: ["nba", "nfl", "mlb", "nhl", "soccer", "football", "basketball", "baseball", "hockey", "championship", "super bowl", "playoffs", "game"],
+    world: ["ukraine", "russia", "china", "israel", "iran", "war", "nato", "ceasefire", "military", "nuclear"],
+    entertainment: ["movie", "film", "music", "album", "concert", "celebrity", "tv", "show", "oscar", "grammy"],
+    economy: ["gdp", "recession", "inflation", "fed", "interest rate", "stock", "market", "company", "earnings"],
+    science: ["ai", "artificial intelligence", "space", "spacex", "nasa", "climate", "research"],
+    legal: ["court", "lawsuit", "trial", "verdict", "judge", "legal"],
+    racing: ["f1", "formula 1", "nascar", "race", "grand prix"],
+  };
+
+  const keywords = categoryKeywords[categoryKey.toLowerCase()] || [];
+  for (const keyword of keywords) {
+    if (titleLower.includes(keyword) || descLower.includes(keyword)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+async function fetchEventsByCategory(params: {
+  category: string;
+  limit?: number;
+  active?: boolean;
+  closed?: boolean;
+}): Promise<Event[]> {
+  // Fetch a larger batch to filter
+  const searchParams = new URLSearchParams();
+  searchParams.set("limit", "200");
+
+  if (params.active !== undefined) {
+    searchParams.set("active", params.active.toString());
+  }
+  if (params.closed !== undefined) {
+    searchParams.set("closed", params.closed.toString());
+  }
+
+  const url = `${GAMMA_API_BASE}/events?${searchParams.toString()}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data)) {
+    throw new Error("Unexpected API response format");
+  }
+
+  const events = data as Event[];
+
+  // Filter by category
+  const filtered = events.filter(event => matchesCategory(event, params.category));
+
+  return filtered.slice(0, params.limit || 10);
+}
+
 async function fetchTrendingMarkets(params: {
   limit?: number;
   sortBy: "volume24hr" | "volume1wk" | "oneDayPriceChange" | "oneWeekPriceChange";
@@ -233,7 +354,7 @@ async function fetchTrendingMarkets(params: {
   }
 
   const markets = data as Market[];
-  
+
   // Sort by the specified field
   const sorted = markets.sort((a, b) => {
     const aVal = Math.abs(parseFloat(a[params.sortBy] || "0"));
@@ -324,7 +445,7 @@ ${outcomesWithPrices}`;
   if (includeDetails) {
     const vol24h = parseFloat(market.volume24hr || "0");
     const priceChange = parseFloat(market.oneDayPriceChange || "0") * 100;
-    
+
     result += `
 
 **24h Volume:** $${vol24h.toLocaleString()}
@@ -364,7 +485,7 @@ function formatEvent(event: Event): string {
 
   if (event.markets && event.markets.length > 0) {
     result += `\n## Markets in this Event\n`;
-    
+
     for (const market of event.markets) {
       let outcomes: string[] = [];
       let prices: string[] = [];
@@ -398,13 +519,13 @@ function formatPriceHistory(history: PriceHistory, question: string): string {
   const points = history.history;
   const latest = points[points.length - 1];
   const oldest = points[0];
-  
+
   // Calculate stats
   const prices = points.map(p => p.p);
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
   const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
-  
+
   // Price change
   const priceChange = latest.p - oldest.p;
   const priceChangePercent = (priceChange / oldest.p) * 100;
@@ -665,6 +786,128 @@ server.tool(
   }
 );
 
+// Tool: get_events_by_category
+server.tool(
+  "get_events_by_category",
+  "Get prediction market events filtered by category. Categories: politics, crypto, sports, world, entertainment, economy, science, legal, racing. Use this when asking about specific topics like 'show me politics markets' or 'what crypto markets are there'.",
+  {
+    category: z.enum(["politics", "crypto", "sports", "world", "entertainment", "economy", "science", "legal", "racing"]).describe("Category to filter by: politics, crypto, sports, world, entertainment, economy, science, legal, racing"),
+    limit: z.number().min(1).max(50).optional().default(10).describe("Number of events to return (1-50, default: 10)"),
+    active: z.boolean().optional().default(true).describe("Filter by active status (default: true)"),
+    closed: z.boolean().optional().default(false).describe("Filter by closed status (default: false)"),
+  },
+  async (params) => {
+    try {
+      const categoryConfig = CATEGORIES.categories[params.category];
+
+      if (!categoryConfig) {
+        const availableCategories = Object.keys(CATEGORIES.categories).join(", ");
+        return {
+          content: [{ type: "text", text: `Unknown category: ${params.category}. Available categories: ${availableCategories}` }],
+          isError: true,
+        };
+      }
+
+      const events = await fetchEventsByCategory({
+        category: params.category,
+        limit: params.limit,
+        active: params.active,
+        closed: params.closed,
+      });
+
+      if (events.length === 0) {
+        return {
+          content: [{ type: "text", text: `No events found in the "${categoryConfig.label}" category.` }],
+        };
+      }
+
+      let response = `# ${categoryConfig.label} Events\n\n`;
+      response += `*${categoryConfig.description}*\n\n`;
+      response += `Found ${events.length} events.\n\n`;
+
+      for (const event of events) {
+        const vol = parseFloat(event.volume || "0").toLocaleString();
+        const marketCount = event.markets?.length || 0;
+
+        response += `## ${event.title}\n\n`;
+        response += `- **Volume:** $${vol}\n`;
+        response += `- **Markets:** ${marketCount}\n`;
+        response += `- **Category:** ${event.category || "N/A"}\n`;
+        response += `- **Slug:** \`${event.slug}\`\n`;
+
+        if (event.description) {
+          response += `- **Description:** ${event.description.slice(0, 150)}${event.description.length > 150 ? "..." : ""}\n`;
+        }
+
+        // Show top markets with prices
+        if (event.markets && event.markets.length > 0) {
+          response += `\n**Top Markets:**\n`;
+          const topMarkets = event.markets.slice(0, 3);
+          for (const market of topMarkets) {
+            let outcomes: string[] = [];
+            let prices: string[] = [];
+            try {
+              outcomes = JSON.parse(market.outcomes || "[]");
+              prices = JSON.parse(market.outcomePrices || "[]");
+            } catch {
+              // Keep empty
+            }
+            const priceStr = outcomes.map((o, i) => {
+              const p = prices[i] ? (parseFloat(prices[i]) * 100).toFixed(0) + "%" : "N/A";
+              return `${o}: ${p}`;
+            }).join(" | ");
+            response += `  - ${market.question.slice(0, 60)}${market.question.length > 60 ? "..." : ""} (${priceStr})\n`;
+          }
+          if (event.markets.length > 3) {
+            response += `  - *...and ${event.markets.length - 3} more markets*\n`;
+          }
+        }
+
+        response += `\n---\n\n`;
+      }
+
+      response += `\nUse \`get_event\` with a slug to see full details of any event.`;
+
+      return {
+        content: [{ type: "text", text: response }],
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      return {
+        content: [{ type: "text", text: `Error fetching events by category: ${errorMessage}` }],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Tool: list_categories
+server.tool(
+  "list_categories",
+  "List all available categories for filtering prediction markets.",
+  {},
+  async () => {
+    let response = "# Available Categories\n\n";
+    response += "Use `get_events_by_category` with any of these categories:\n\n";
+    response += "| Category | Description | Example Tags |\n";
+    response += "|----------|-------------|-------------|\n";
+
+    for (const [key, config] of Object.entries(CATEGORIES.categories)) {
+      const exampleTags = config.tags.slice(0, 3).join(", ");
+      response += `| **${key}** | ${config.description} | ${exampleTags} |\n`;
+    }
+
+    response += "\n## Usage Examples\n\n";
+    response += "- `get_events_by_category(category='politics')` - Political events and elections\n";
+    response += "- `get_events_by_category(category='crypto')` - Cryptocurrency markets\n";
+    response += "- `get_events_by_category(category='sports')` - Sports betting markets\n";
+
+    return {
+      content: [{ type: "text", text: response }],
+    };
+  }
+);
+
 // Tool: get_trending_markets
 server.tool(
   "get_trending_markets",
@@ -697,8 +940,8 @@ server.tool(
 
       for (let i = 0; i < markets.length; i++) {
         const market = markets[i];
-        const sortValue = market[params.sort_by as keyof Market] || "0";
-        
+        const sortValue = String(market[params.sort_by as keyof Market] || "0");
+
         let valueStr: string;
         if (params.sort_by.includes("PriceChange")) {
           const change = parseFloat(sortValue) * 100;
@@ -710,7 +953,7 @@ server.tool(
         response += `### ${i + 1}. ${market.question}\n`;
         response += `- **${sortLabels[params.sort_by]}:** ${valueStr}\n`;
         response += `- **Total Volume:** $${parseFloat(market.volume || "0").toLocaleString()}\n`;
-        
+
         let outcomes: string[] = [];
         let prices: string[] = [];
         try {
@@ -719,12 +962,12 @@ server.tool(
         } catch {
           // Keep empty
         }
-        
+
         const priceStr = outcomes.map((o, i) => {
           const p = prices[i] ? (parseFloat(prices[i]) * 100).toFixed(1) + "%" : "N/A";
           return `${o}: ${p}`;
         }).join(" | ");
-        
+
         response += `- **Prices:** ${priceStr}\n`;
         response += `- **ID:** ${market.id}\n\n`;
       }
@@ -755,7 +998,7 @@ server.tool(
     try {
       // First fetch the market to get token IDs
       const market = await fetchMarketById(params.market_id);
-      
+
       if (!market) {
         return {
           content: [{ type: "text", text: `Market with ID ${params.market_id} not found.` }],
@@ -821,7 +1064,7 @@ server.tool(
     try {
       // First fetch the market to get token IDs
       const market = await fetchMarketById(params.market_id);
-      
+
       if (!market) {
         return {
           content: [{ type: "text", text: `Market with ID ${params.market_id} not found.` }],
@@ -882,7 +1125,7 @@ server.tool(
   async (params) => {
     try {
       const market = await fetchMarketById(params.market_id);
-      
+
       if (!market) {
         return {
           content: [{ type: "text", text: `Market with ID ${params.market_id} not found.` }],

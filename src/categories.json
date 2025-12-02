@@ -1,0 +1,187 @@
+{
+  "categories": {
+    "politics": {
+      "label": "Politics",
+      "description": "US and international political events, elections, government affairs",
+      "tags": [
+        "kamala-harris", "adam-schiff", "dean-phillips", "robert-fpt-kennedy-jrpt",
+        "mike-pence", "mike-pompeo", "laphonza-butler", "menendez", "jd",
+        "uptspt-election", "uptspt-presidential-election-2024", "elections-2024",
+        "democratic-presidential-nomination", "vp-nominee", "primaries", "primary-election",
+        "election-results", "election-forecastingpt", "electoral-votes", "electors",
+        "democrat", "republican", "impeachment", "shutdown", "government", "us-government",
+        "appointments", "leadership", "foreign-aid"
+      ],
+      "apiCategory": "Politics"
+    },
+    "crypto": {
+      "label": "Crypto & Web3",
+      "description": "Cryptocurrency, blockchain, DeFi, NFTs",
+      "tags": [
+        "blur", "zhu-su", "truth", "phantom"
+      ],
+      "apiCategory": "Crypto"
+    },
+    "sports": {
+      "label": "Sports",
+      "description": "NFL, NBA, Soccer, Wrestling, and other sports",
+      "tags": [
+        "bears", "browns", "cardinals", "ravens", "seahawks", "rams", "vikings",
+        "detroit-lions", "EPL", "man-city", "salah", "saudi-club",
+        "marathon", "wrestling", "cfb", "running-back", "ravis-kelce",
+        "magnus-carlsen", "hans", "james-harden"
+      ],
+      "apiCategory": "Sports"
+    },
+    "world": {
+      "label": "World Affairs",
+      "description": "International relations, geopolitics, world leaders",
+      "tags": [
+        "world-affairs", "saudi-arabia", "armenia", "brics", "mexico",
+        "zelensky", "ayatollah-khamenei", "yahya-sinwar", "yemeni-houthis",
+        "mika-aaltola", "pavel", "lebannon", "mossad", "prime-minister"
+      ],
+      "apiCategory": "World"
+    },
+    "entertainment": {
+      "label": "Entertainment",
+      "description": "Music, TV, celebrities, pop culture",
+      "tags": [
+        "miley-cyrus", "ynw-melly", "dating", "interview", "interviews",
+        "season-finale", "disclosure", "harry"
+      ],
+      "apiCategory": "Entertainment"
+    },
+    "economy": {
+      "label": "Economy & Business",
+      "description": "GDP, markets, companies, mergers",
+      "tags": [
+        "gdp", "q3", "income-predictions", "end-of-year", "end-of-year-prediction",
+        "merger", "app"
+      ],
+      "apiCategory": "Economics"
+    },
+    "science": {
+      "label": "Science & Tech",
+      "description": "Technology, AI, space, climate",
+      "tags": [
+        "global-warming", "competition", "competitions"
+      ],
+      "apiCategory": "Science"
+    },
+    "legal": {
+      "label": "Legal",
+      "description": "Court cases, laws, legal proceedings",
+      "tags": [
+        "us-law", "attack", "gender-issues", "weed"
+      ],
+      "apiCategory": "Legal"
+    },
+    "racing": {
+      "label": "Racing & Motorsports",
+      "description": "F1, NASCAR, motorsports",
+      "tags": [
+        "aston-martin", "mercedes"
+      ],
+      "apiCategory": "Racing"
+    }
+  },
+  "allTags": [
+    {"id":"207","label":"dating","slug":"dating"},
+    {"id":"355","label":"dean phillips","slug":"dean-phillips"},
+    {"id":"318","label":"marathon","slug":"marathon"},
+    {"id":"349","label":"mauricio pochettino","slug":"mauricio-pochettino"},
+    {"id":"360","label":"robert f. kennedy jr.","slug":"robert-fpt-kennedy-jrpt"},
+    {"id":"100457","label":"truth","slug":"truth"},
+    {"id":"231","label":"menendez","slug":"menendez"},
+    {"id":"1082","label":"mika aaltola","slug":"mika-aaltola"},
+    {"id":"333","label":"armenia","slug":"armenia"},
+    {"id":"1115","label":"mike pompeo","slug":"mike-pompeo"},
+    {"id":"1053","label":"miley cyrus","slug":"miley-cyrus"},
+    {"id":"340","label":"adam schiff","slug":"adam-schiff"},
+    {"id":"385","label":"salah","slug":"salah"},
+    {"id":"375","label":"u.s. election","slug":"uptspt-election"},
+    {"id":"327","label":"us government","slug":"us-government"},
+    {"id":"308","label":"saudi arabia","slug":"saudi-arabia"},
+    {"id":"387","label":"saudi club","slug":"saudi-club"},
+    {"id":"384","label":"seahawks","slug":"seahawks"},
+    {"id":"325","label":"democratic presidential nomination","slug":"democratic-presidential-nomination"},
+    {"id":"1179","label":"detroit lions","slug":"detroit-lions"},
+    {"id":"330","label":"season finale","slug":"season-finale"},
+    {"id":"379","label":"disclosure","slug":"disclosure"},
+    {"id":"359","label":"u.s. presidential election 2024","slug":"uptspt-presidential-election-2024"},
+    {"id":"101133","label":"electors","slug":"electors"},
+    {"id":"313","label":"hans","slug":"hans"},
+    {"id":"369","label":"vikings","slug":"vikings"},
+    {"id":"100466","label":"app","slug":"app"},
+    {"id":"1026","label":"election forecasting.","slug":"election-forecastingpt"},
+    {"id":"298","label":"vp nominee","slug":"vp-nominee"},
+    {"id":"413","label":"weed","slug":"weed"},
+    {"id":"323","label":"harry","slug":"harry"},
+    {"id":"1022","label":"election results","slug":"election-results"},
+    {"id":"377","label":"elections 2024","slug":"elections-2024"},
+    {"id":"366","label":"world affairs","slug":"world-affairs"},
+    {"id":"364","label":"ayatollah khamenei","slug":"ayatollah-khamenei"},
+    {"id":"347","label":"bears","slug":"bears"},
+    {"id":"1149","label":"wrestling","slug":"wrestling"},
+    {"id":"1027","label":"electoral votes","slug":"electoral-votes"},
+    {"id":"361","label":"shutdown","slug":"shutdown"},
+    {"id":"958","label":"xóchitl gálvez","slug":"xochitl-galvez"},
+    {"id":"629","label":"yahya sinwar","slug":"yahya-sinwar"},
+    {"id":"112","label":"appointments","slug":"appointments"},
+    {"id":"357","label":"impeachment","slug":"impeachment"},
+    {"id":"100474","label":"merger","slug":"merger"},
+    {"id":"320","label":"competition","slug":"competition"},
+    {"id":"754","label":"yemeni houthis","slug":"yemeni-houthis"},
+    {"id":"428","label":"ynw melly","slug":"ynw-melly"},
+    {"id":"452","label":"zelensky","slug":"zelensky"},
+    {"id":"367","label":"income predictions","slug":"income-predictions"},
+    {"id":"203","label":"interview","slug":"interview"},
+    {"id":"949","label":"zhu su","slug":"zhu-su"},
+    {"id":"264","label":"primaries","slug":"primaries"},
+    {"id":"343","label":"primary election","slug":"primary-election"},
+    {"id":"314","label":"end of year","slug":"end-of-year"},
+    {"id":"363","label":"competitions","slug":"competitions"},
+    {"id":"389","label":"prime minister","slug":"prime-minister"},
+    {"id":"372","label":"q3","slug":"q3"},
+    {"id":"955","label":"interviews","slug":"interviews"},
+    {"id":"362","label":"james harden","slug":"james-harden"},
+    {"id":"353","label":"rams","slug":"rams"},
+    {"id":"306","label":"EPL","slug":"EPL"},
+    {"id":"342","label":"California","slug":"california"},
+    {"id":"383","label":"ravens","slug":"ravens"},
+    {"id":"100351","label":"CFB","slug":"cfb"},
+    {"id":"220","label":"kamala harris","slug":"kamala-harris"},
+    {"id":"302","label":"end of year prediction","slug":"end-of-year-prediction"},
+    {"id":"356","label":"laphonza butler","slug":"laphonza-butler"},
+    {"id":"331","label":"foreign aid","slug":"foreign-aid"},
+    {"id":"328","label":"blur","slug":"blur"},
+    {"id":"370","label":"gdp","slug":"gdp"},
+    {"id":"365","label":"leadership","slug":"leadership"},
+    {"id":"378","label":"brics","slug":"brics"},
+    {"id":"299","label":"gender issues","slug":"gender-issues"},
+    {"id":"312","label":"magnus carlsen","slug":"magnus-carlsen"},
+    {"id":"316","label":"browns","slug":"browns"},
+    {"id":"92","label":"global warming","slug":"global-warming"},
+    {"id":"317","label":"cardinals","slug":"cardinals"},
+    {"id":"531","label":"us law","slug":"us-law"},
+    {"id":"459","label":"democrat","slug":"democrat"},
+    {"id":"424","label":"man city","slug":"man-city"},
+    {"id":"436","label":"aston martin","slug":"aston-martin"},
+    {"id":"437","label":"mercedes","slug":"mercedes"},
+    {"id":"956","label":"mexico","slug":"mexico"},
+    {"id":"432","label":"mike pence","slug":"mike-pence"},
+    {"id":"100467","label":"lebannon","slug":"lebannon"},
+    {"id":"412","label":"attack","slug":"attack"},
+    {"id":"102488","label":"phantom","slug":"phantom"},
+    {"id":"1510","label":"minnesota","slug":"minnesota"},
+    {"id":"460","label":"mississippi","slug":"mississippi"},
+    {"id":"419","label":"government","slug":"government"},
+    {"id":"100458","label":"mossad","slug":"mossad"},
+    {"id":"100331","label":"JD","slug":"jd"},
+    {"id":"100394","label":"Running Back","slug":"running-back"},
+    {"id":"100415","label":"ravis kelce","slug":"ravis-kelce"},
+    {"id":"100373","label":"pavel","slug":"pavel"}
+  ]
+}
+

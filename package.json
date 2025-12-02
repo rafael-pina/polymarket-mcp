@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp src/categories.json dist/",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "client": "npx @modelcontextprotocol/inspector node dist/index.js"
