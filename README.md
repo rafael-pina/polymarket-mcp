@@ -233,6 +233,54 @@ Once configured, you can ask your AI assistant:
 - *"List all sports betting markets"*
 - *"What's the order book depth for the presidential election market?"*
 
+## 📚 Workflows & Examples
+
+### Advanced Workflows
+
+See [docs/WORKFLOWS.md](docs/WORKFLOWS.md) for powerful multi-source workflows:
+
+| Workflow | Description |
+|----------|-------------|
+| **Truth Terminal** | Validate news headlines against market odds |
+| **Crypto Alpha Scanner** | Correlate prediction markets with crypto prices |
+| **Liquidity Sniper** | Find markets with wide spreads |
+| **Paper Trading** | Simulate positions without real money |
+| **Governance Watchdog** | Monitor regulatory/policy markets |
+
+### Demo Script
+
+Run the market analyst demo to see the API in action:
+
+```bash
+# Install tsx if needed
+npm install -D tsx
+
+# Run the demo
+npx tsx examples/market_analyst.ts
+```
+
+The demo will:
+1. Fetch the top 10 trending markets by 24h volume
+2. Search for and analyze a specific event
+3. Show order book depth for a market
+4. Execute a simulated paper trade
+
+### Prompt Templates
+
+Quick prompts to try with your AI assistant:
+
+```
+# Quick market check
+What does Polymarket say about [TOPIC]? Show me the odds.
+
+# Cross-source validation
+News reports say [EVENT]. Check Polymarket and tell me if the
+smart money agrees.
+
+# Find opportunities
+Find markets closing in the next 24 hours with 90%+ odds on one side.
+```
+
 ## 🔧 Development
 
 ```bash

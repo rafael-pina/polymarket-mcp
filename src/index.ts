@@ -44,24 +44,27 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-server.tool(
+server.registerTool(
   "list_markets",
-  "List prediction markets from Polymarket. Returns market information including questions, outcomes, prices, volume, and liquidity.",
   {
-    limit: z
-      .number()
-      .min(1)
-      .max(100)
-      .optional()
-      .default(10)
-      .describe("Number of markets to return (1-100, default: 10)"),
-    active: z.boolean().optional().describe("Filter by active status"),
-    closed: z.boolean().optional().describe("Filter by closed status"),
-    offset: z
-      .number()
-      .min(0)
-      .optional()
-      .describe("Offset for pagination (default: 0)"),
+    description:
+      "List prediction markets from Polymarket. Returns market information including questions, outcomes, prices, volume, and liquidity.",
+    inputSchema: {
+      limit: z
+        .number()
+        .min(1)
+        .max(100)
+        .optional()
+        .default(10)
+        .describe("Number of markets to return (1-100, default: 10)"),
+      active: z.boolean().optional().describe("Filter by active status"),
+      closed: z.boolean().optional().describe("Filter by closed status"),
+      offset: z
+        .number()
+        .min(0)
+        .optional()
+        .describe("Offset for pagination (default: 0)"),
+    },
   },
   async (params) => {
     try {
@@ -104,20 +107,23 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "search_markets",
-  "Search for prediction markets by keyword. Searches market questions, descriptions, and events. This searches through events for comprehensive coverage.",
   {
-    query: z.string().min(1).describe("Search query to find markets"),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of results to return (1-50, default: 10)"),
-    active: z.boolean().optional().describe("Filter by active status"),
-    closed: z.boolean().optional().describe("Filter by closed status"),
+    description:
+      "Search for prediction markets by keyword. Searches market questions, descriptions, and events. This searches through events for comprehensive coverage.",
+    inputSchema: {
+      query: z.string().min(1).describe("Search query to find markets"),
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of results to return (1-50, default: 10)"),
+      active: z.boolean().optional().describe("Filter by active status"),
+      closed: z.boolean().optional().describe("Filter by closed status"),
+    },
   },
   async (params) => {
     try {
@@ -224,25 +230,28 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "search_events",
-  "Search for prediction market events by keyword. Events group related markets together. This is useful for finding markets on specific topics.",
   {
-    query: z
-      .string()
-      .min(1)
-      .describe(
-        "Search query to find events (e.g., 'Venezuela', 'Trump', 'Bitcoin')"
-      ),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of results to return (1-50, default: 10)"),
-    active: z.boolean().optional().describe("Filter by active status"),
-    closed: z.boolean().optional().describe("Filter by closed status"),
+    description:
+      "Search for prediction market events by keyword. Events group related markets together. This is useful for finding markets on specific topics.",
+    inputSchema: {
+      query: z
+        .string()
+        .min(1)
+        .describe(
+          "Search query to find events (e.g., 'Venezuela', 'Trump', 'Bitcoin')"
+        ),
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of results to return (1-50, default: 10)"),
+      active: z.boolean().optional().describe("Filter by active status"),
+      closed: z.boolean().optional().describe("Filter by closed status"),
+    },
   },
   async (params) => {
     try {
@@ -340,28 +349,31 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_event",
-  "Get a Polymarket event with all its sub-markets. Events group related markets together (e.g., 'Bitcoin price targets' with markets for $100k, $150k, $200k, etc.).",
   {
-    slug: z
-      .string()
-      .optional()
-      .describe("Event slug (e.g., 'presidential-election-winner-2024')"),
-    event_id: z.string().optional().describe("Event ID"),
-    list_events: z
-      .boolean()
-      .optional()
-      .describe(
-        "If true, list available events instead of fetching a specific one"
-      ),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of events to list (when list_events=true)"),
+    description:
+      "Get a Polymarket event with all its sub-markets. Events group related markets together (e.g., 'Bitcoin price targets' with markets for $100k, $150k, $200k, etc.).",
+    inputSchema: {
+      slug: z
+        .string()
+        .optional()
+        .describe("Event slug (e.g., 'presidential-election-winner-2024')"),
+      event_id: z.string().optional().describe("Event ID"),
+      list_events: z
+        .boolean()
+        .optional()
+        .describe(
+          "If true, list available events instead of fetching a specific one"
+        ),
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of events to list (when list_events=true)"),
+    },
   },
   async (params) => {
     try {
@@ -433,40 +445,43 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_events_by_category",
-  "Get prediction market events filtered by category. Categories: politics, crypto, sports, world, entertainment, economy, science, legal, racing.",
   {
-    category: z
-      .enum([
-        "politics",
-        "crypto",
-        "sports",
-        "world",
-        "entertainment",
-        "economy",
-        "science",
-        "legal",
-        "racing",
-      ])
-      .describe("Category to filter by"),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of events to return (1-50, default: 10)"),
-    active: z
-      .boolean()
-      .optional()
-      .default(true)
-      .describe("Filter by active status (default: true)"),
-    closed: z
-      .boolean()
-      .optional()
-      .default(false)
-      .describe("Filter by closed status (default: false)"),
+    description:
+      "Get prediction market events filtered by category. Categories: politics, crypto, sports, world, entertainment, economy, science, legal, racing.",
+    inputSchema: {
+      category: z
+        .enum([
+          "politics",
+          "crypto",
+          "sports",
+          "world",
+          "entertainment",
+          "economy",
+          "science",
+          "legal",
+          "racing",
+        ])
+        .describe("Category to filter by"),
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of events to return (1-50, default: 10)"),
+      active: z
+        .boolean()
+        .optional()
+        .default(true)
+        .describe("Filter by active status (default: true)"),
+      closed: z
+        .boolean()
+        .optional()
+        .default(false)
+        .describe("Filter by closed status (default: false)"),
+    },
   },
   async (params) => {
     try {
@@ -574,10 +589,12 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "list_categories",
-  "List all available categories for filtering prediction markets.",
-  {},
+  {
+    description:
+      "List all available categories for filtering prediction markets.",
+  },
   async () => {
     let response =
       "# Available Categories\n\nUse `get_events_by_category` with any of these categories:\n\n";
@@ -601,29 +618,32 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_trending_markets",
-  "Get trending/top markets sorted by volume or price change. Great for discovering hot markets.",
   {
-    sort_by: z
-      .enum([
-        "volume24hr",
-        "volume1wk",
-        "oneDayPriceChange",
-        "oneWeekPriceChange",
-      ])
-      .optional()
-      .default("volume24hr")
-      .describe(
-        "Sort by: volume24hr, volume1wk, oneDayPriceChange, or oneWeekPriceChange"
-      ),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of markets to return (1-50, default: 10)"),
+    description:
+      "Get trending/top markets sorted by volume or price change. Great for discovering hot markets.",
+    inputSchema: {
+      sort_by: z
+        .enum([
+          "volume24hr",
+          "volume1wk",
+          "oneDayPriceChange",
+          "oneWeekPriceChange",
+        ])
+        .optional()
+        .default("volume24hr")
+        .describe(
+          "Sort by: volume24hr, volume1wk, oneDayPriceChange, or oneWeekPriceChange"
+        ),
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of markets to return (1-50, default: 10)"),
+    },
   },
   async (params) => {
     try {
@@ -706,24 +726,27 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_price_history",
-  "Get historical price data for a market. Shows how odds have changed over time.",
   {
-    market_id: z.string().describe("The market ID to get price history for"),
-    outcome_index: z
-      .number()
-      .min(0)
-      .optional()
-      .default(0)
-      .describe(
-        "Which outcome to get history for (0 = first outcome, usually 'Yes')"
-      ),
-    interval: z
-      .enum(["1d", "1w", "1m", "3m", "1y", "max"])
-      .optional()
-      .default("1m")
-      .describe("Time interval: 1d, 1w, 1m, 3m, 1y, or max"),
+    description:
+      "Get historical price data for a market. Shows how odds have changed over time.",
+    inputSchema: {
+      market_id: z.string().describe("The market ID to get price history for"),
+      outcome_index: z
+        .number()
+        .min(0)
+        .optional()
+        .default(0)
+        .describe(
+          "Which outcome to get history for (0 = first outcome, usually 'Yes')"
+        ),
+      interval: z
+        .enum(["1d", "1w", "1m", "3m", "1y", "max"])
+        .optional()
+        .default("1m")
+        .describe("Time interval: 1d, 1w, 1m, 3m, 1y, or max"),
+    },
   },
   async (params) => {
     try {
@@ -803,19 +826,22 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_order_book",
-  "Get the order book (market depth) for a market. Shows current bids and asks.",
   {
-    market_id: z.string().describe("The market ID to get order book for"),
-    outcome_index: z
-      .number()
-      .min(0)
-      .optional()
-      .default(0)
-      .describe(
-        "Which outcome to get order book for (0 = first outcome, usually 'Yes')"
-      ),
+    description:
+      "Get the order book (market depth) for a market. Shows current bids and asks.",
+    inputSchema: {
+      market_id: z.string().describe("The market ID to get order book for"),
+      outcome_index: z
+        .number()
+        .min(0)
+        .optional()
+        .default(0)
+        .describe(
+          "Which outcome to get order book for (0 = first outcome, usually 'Yes')"
+        ),
+    },
   },
   async (params) => {
     try {
@@ -887,11 +913,13 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_market",
-  "Get detailed information about a specific market by ID.",
   {
-    market_id: z.string().describe("The market ID to fetch"),
+    description: "Get detailed information about a specific market by ID.",
+    inputSchema: {
+      market_id: z.string().describe("The market ID to fetch"),
+    },
   },
   async (params) => {
     try {
@@ -923,32 +951,35 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_events_by_series",
-  "Get prediction market events for a specific sports series (e.g., NBA, NFL, MLB, NHL). Great for finding all games/matches for a league.",
   {
-    series: z
-      .string()
-      .describe(
-        "Series identifier (e.g., 'nba', 'nfl', 'mlb', 'nhl', 'soccer', 'f1', 'ufc')"
-      ),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of events to return (1-50, default: 10)"),
-    active: z
-      .boolean()
-      .optional()
-      .default(true)
-      .describe("Filter by active status (default: true)"),
-    closed: z
-      .boolean()
-      .optional()
-      .default(false)
-      .describe("Filter by closed status (default: false)"),
+    description:
+      "Get prediction market events for a specific sports series (e.g., NBA, NFL, MLB, NHL). Great for finding all games/matches for a league.",
+    inputSchema: {
+      series: z
+        .string()
+        .describe(
+          "Series identifier (e.g., 'nba', 'nfl', 'mlb', 'nhl', 'soccer', 'f1', 'ufc')"
+        ),
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of events to return (1-50, default: 10)"),
+      active: z
+        .boolean()
+        .optional()
+        .default(true)
+        .describe("Filter by active status (default: true)"),
+      closed: z
+        .boolean()
+        .optional()
+        .default(false)
+        .describe("Filter by closed status (default: false)"),
+    },
   },
   async (params) => {
     try {
@@ -1043,24 +1074,27 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_closing_soon",
-  "Get markets that are closing/resolving soon. Great for finding imminent trading opportunities.",
   {
-    hours: z
-      .number()
-      .min(1)
-      .max(168)
-      .optional()
-      .default(24)
-      .describe("Hours until close (1-168, default: 24)"),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of events to return (1-50, default: 10)"),
+    description:
+      "Get markets that are closing/resolving soon. Great for finding imminent trading opportunities.",
+    inputSchema: {
+      hours: z
+        .number()
+        .min(1)
+        .max(168)
+        .optional()
+        .default(24)
+        .describe("Hours until close (1-168, default: 24)"),
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of events to return (1-50, default: 10)"),
+    },
   },
   async (params) => {
     try {
@@ -1143,22 +1177,25 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_most_engaged",
-  "Get the most engaged markets sorted by comment count. High comment counts often indicate controversial or high-interest markets.",
   {
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of events to return (1-50, default: 10)"),
-    active: z
-      .boolean()
-      .optional()
-      .default(true)
-      .describe("Filter by active status (default: true)"),
+    description:
+      "Get the most engaged markets sorted by comment count. High comment counts often indicate controversial or high-interest markets.",
+    inputSchema: {
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of events to return (1-50, default: 10)"),
+      active: z
+        .boolean()
+        .optional()
+        .default(true)
+        .describe("Filter by active status (default: true)"),
+    },
   },
   async (params) => {
     try {
@@ -1226,22 +1263,25 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_high_liquidity_markets",
-  "Get markets with the highest liquidity. High liquidity means better execution and tighter spreads for traders.",
   {
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of markets to return (1-50, default: 10)"),
-    min_liquidity: z
-      .number()
-      .min(0)
-      .optional()
-      .describe("Minimum liquidity threshold in USD"),
+    description:
+      "Get markets with the highest liquidity. High liquidity means better execution and tighter spreads for traders.",
+    inputSchema: {
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of markets to return (1-50, default: 10)"),
+      min_liquidity: z
+        .number()
+        .min(0)
+        .optional()
+        .describe("Minimum liquidity threshold in USD"),
+    },
   },
   async (params) => {
     try {
@@ -1312,24 +1352,27 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_recently_resolved",
-  "Get markets that have recently resolved/closed. See historical results and how markets were settled.",
   {
-    days: z
-      .number()
-      .min(1)
-      .max(30)
-      .optional()
-      .default(7)
-      .describe("Look back period in days (1-30, default: 7)"),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of events to return (1-50, default: 10)"),
+    description:
+      "Get markets that have recently resolved/closed. See historical results and how markets were settled.",
+    inputSchema: {
+      days: z
+        .number()
+        .min(1)
+        .max(30)
+        .optional()
+        .default(7)
+        .describe("Look back period in days (1-30, default: 7)"),
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of events to return (1-50, default: 10)"),
+    },
   },
   async (params) => {
     try {
@@ -1409,32 +1452,35 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_events_by_tag",
-  "Get events filtered by a specific tag. More granular than category filtering - find events by specific topics like 'trump', 'bitcoin', 'nfl', etc.",
   {
-    tag: z
-      .string()
-      .describe(
-        "Tag to filter by (e.g., 'trump', 'bitcoin', 'nfl', 'kamala-harris')"
-      ),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of events to return (1-50, default: 10)"),
-    active: z
-      .boolean()
-      .optional()
-      .default(true)
-      .describe("Filter by active status (default: true)"),
-    closed: z
-      .boolean()
-      .optional()
-      .default(false)
-      .describe("Filter by closed status (default: false)"),
+    description:
+      "Get events filtered by a specific tag. More granular than category filtering - find events by specific topics like 'trump', 'bitcoin', 'nfl', etc.",
+    inputSchema: {
+      tag: z
+        .string()
+        .describe(
+          "Tag to filter by (e.g., 'trump', 'bitcoin', 'nfl', 'kamala-harris')"
+        ),
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of events to return (1-50, default: 10)"),
+      active: z
+        .boolean()
+        .optional()
+        .default(true)
+        .describe("Filter by active status (default: true)"),
+      closed: z
+        .boolean()
+        .optional()
+        .default(false)
+        .describe("Filter by closed status (default: false)"),
+    },
   },
   async (params) => {
     try {
@@ -1524,24 +1570,27 @@ server.tool(
   }
 );
 
-server.tool(
+server.registerTool(
   "get_competitive_markets",
-  "Get markets with close/competitive odds (near 50/50). These are the most uncertain markets where the outcome is genuinely in question.",
   {
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .optional()
-      .default(10)
-      .describe("Number of markets to return (1-50, default: 10)"),
-    spread_threshold: z
-      .number()
-      .min(0.05)
-      .max(0.5)
-      .optional()
-      .default(0.2)
-      .describe("Maximum spread from 50/50 (0.05-0.5, default: 0.2 = 20%)"),
+    description:
+      "Get markets with close/competitive odds (near 50/50). These are the most uncertain markets where the outcome is genuinely in question.",
+    inputSchema: {
+      limit: z
+        .number()
+        .min(1)
+        .max(50)
+        .optional()
+        .default(10)
+        .describe("Number of markets to return (1-50, default: 10)"),
+      spread_threshold: z
+        .number()
+        .min(0.05)
+        .max(0.5)
+        .optional()
+        .default(0.2)
+        .describe("Maximum spread from 50/50 (0.05-0.5, default: 0.2 = 20%)"),
+    },
   },
   async (params) => {
     try {
