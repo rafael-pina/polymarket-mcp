@@ -12,17 +12,17 @@ This MCP server enables AI assistants like **Claude**, **Cursor**, and other MCP
 
 ## ✨ Features
 
-| Tool | Description |
-|------|-------------|
-| `list_markets` | List and paginate through all Polymarket prediction markets |
-| `search_markets` | Search markets by keyword (questions & descriptions) |
-| `get_market` | Get detailed information about a specific market by ID |
-| `get_event` | Fetch event details with all sub-markets grouped together |
+| Tool                     | Description                                                 |
+| ------------------------ | ----------------------------------------------------------- |
+| `list_markets`           | List and paginate through all Polymarket prediction markets |
+| `search_markets`         | Search markets by keyword (questions & descriptions)        |
+| `get_market`             | Get detailed information about a specific market by ID      |
+| `get_event`              | Fetch event details with all sub-markets grouped together   |
 | `get_events_by_category` | Filter markets by category (politics, crypto, sports, etc.) |
-| `list_categories` | List all available market categories |
-| `get_trending_markets` | Discover hot markets by volume or price movement |
-| `get_price_history` | Historical price/odds data for any market |
-| `get_order_book` | Real-time order book depth (bids & asks) |
+| `list_categories`        | List all available market categories                        |
+| `get_trending_markets`   | Discover hot markets by volume or price movement            |
+| `get_price_history`      | Historical price/odds data for any market                   |
+| `get_order_book`         | Real-time order book depth (bids & asks)                    |
 
 ## 📦 Installation
 
@@ -89,14 +89,14 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 
 List prediction markets from Polymarket with pagination support.
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `limit` | number | 10 | Number of markets (1-100) |
-| `active` | boolean | - | Filter by active status |
-| `closed` | boolean | - | Filter by closed status |
-| `offset` | number | 0 | Pagination offset |
+| Parameter | Type    | Default | Description               |
+| --------- | ------- | ------- | ------------------------- |
+| `limit`   | number  | 10      | Number of markets (1-100) |
+| `active`  | boolean | -       | Filter by active status   |
+| `closed`  | boolean | -       | Filter by closed status   |
+| `offset`  | number  | 0       | Pagination offset         |
 
-**Example:** *"List 20 active markets on Polymarket"*
+**Example:** _"List 20 active markets on Polymarket"_
 
 ---
 
@@ -104,14 +104,14 @@ List prediction markets from Polymarket with pagination support.
 
 Search for markets by keyword matching questions and descriptions.
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `query` | string | *required* | Search query |
-| `limit` | number | 10 | Number of results (1-50) |
-| `active` | boolean | - | Filter by active status |
-| `closed` | boolean | - | Filter by closed status |
+| Parameter | Type    | Default    | Description              |
+| --------- | ------- | ---------- | ------------------------ |
+| `query`   | string  | _required_ | Search query             |
+| `limit`   | number  | 10         | Number of results (1-50) |
+| `active`  | boolean | -          | Filter by active status  |
+| `closed`  | boolean | -          | Filter by closed status  |
 
-**Example:** *"Search for Bitcoin prediction markets"*
+**Example:** _"Search for Bitcoin prediction markets"_
 
 ---
 
@@ -119,11 +119,11 @@ Search for markets by keyword matching questions and descriptions.
 
 Get detailed information about a specific market.
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description            |
+| ----------- | ------ | ---------------------- |
 | `market_id` | string | The market ID to fetch |
 
-**Example:** *"Get details for market ID 0x..."*
+**Example:** _"Get details for market ID 0x..."_
 
 ---
 
@@ -131,14 +131,14 @@ Get detailed information about a specific market.
 
 Fetch an event with all its sub-markets. Events group related markets together.
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `slug` | string | Event slug (e.g., `presidential-election-winner-2024`) |
-| `event_id` | string | Event ID |
-| `list_events` | boolean | List available events instead |
-| `limit` | number | Number of events to list (default: 10) |
+| Parameter     | Type    | Description                                            |
+| ------------- | ------- | ------------------------------------------------------ |
+| `slug`        | string  | Event slug (e.g., `presidential-election-winner-2024`) |
+| `event_id`    | string  | Event ID                                               |
+| `list_events` | boolean | List available events instead                          |
+| `limit`       | number  | Number of events to list (default: 10)                 |
 
-**Example:** *"Show me the presidential election event on Polymarket"*
+**Example:** _"Show me the presidential election event on Polymarket"_
 
 ---
 
@@ -146,14 +146,15 @@ Fetch an event with all its sub-markets. Events group related markets together.
 
 Filter prediction markets by category for focused exploration.
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `category` | enum | *required* | Category filter (see below) |
-| `limit` | number | 10 | Number of events (1-50) |
-| `active` | boolean | true | Filter by active status |
-| `closed` | boolean | false | Filter by closed status |
+| Parameter  | Type    | Default    | Description                 |
+| ---------- | ------- | ---------- | --------------------------- |
+| `category` | enum    | _required_ | Category filter (see below) |
+| `limit`    | number  | 10         | Number of events (1-50)     |
+| `active`   | boolean | true       | Filter by active status     |
+| `closed`   | boolean | false      | Filter by closed status     |
 
 **Available Categories:**
+
 - `politics` — Elections, government, political events
 - `crypto` — Cryptocurrency, blockchain, DeFi
 - `sports` — NFL, NBA, Soccer, and more
@@ -164,7 +165,7 @@ Filter prediction markets by category for focused exploration.
 - `legal` — Court cases, laws
 - `racing` — F1, NASCAR, motorsports
 
-**Example:** *"Show me politics markets on Polymarket"*
+**Example:** _"Show me politics markets on Polymarket"_
 
 ---
 
@@ -172,7 +173,7 @@ Filter prediction markets by category for focused exploration.
 
 List all available categories for filtering markets.
 
-**Example:** *"What categories are available on Polymarket?"*
+**Example:** _"What categories are available on Polymarket?"_
 
 ---
 
@@ -180,18 +181,19 @@ List all available categories for filtering markets.
 
 Discover trending markets sorted by activity metrics.
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `sort_by` | enum | `volume24hr` | Sort metric |
-| `limit` | number | 10 | Number of markets (1-50) |
+| Parameter | Type   | Default      | Description              |
+| --------- | ------ | ------------ | ------------------------ |
+| `sort_by` | enum   | `volume24hr` | Sort metric              |
+| `limit`   | number | 10           | Number of markets (1-50) |
 
 **Sort Options:**
+
 - `volume24hr` — 24-hour trading volume
 - `volume1wk` — Weekly trading volume
 - `oneDayPriceChange` — 24-hour price movement
 - `oneWeekPriceChange` — Weekly price movement
 
-**Example:** *"Show me the hottest markets by 24h volume"*
+**Example:** _"Show me the hottest markets by 24h volume"_
 
 ---
 
@@ -199,15 +201,15 @@ Discover trending markets sorted by activity metrics.
 
 Get historical price/odds data for market analysis.
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `market_id` | string | *required* | Market ID |
-| `outcome_index` | number | 0 | Outcome index (0 = Yes) |
-| `interval` | enum | `1m` | Time range |
+| Parameter       | Type   | Default    | Description             |
+| --------------- | ------ | ---------- | ----------------------- |
+| `market_id`     | string | _required_ | Market ID               |
+| `outcome_index` | number | 0          | Outcome index (0 = Yes) |
+| `interval`      | enum   | `1m`       | Time range              |
 
 **Intervals:** `1d`, `1w`, `1m`, `3m`, `1y`, `max`
 
-**Example:** *"Show price history for market 0x... over the past month"*
+**Example:** _"Show price history for market 0x... over the past month"_
 
 ---
 
@@ -215,55 +217,23 @@ Get historical price/odds data for market analysis.
 
 Get real-time order book depth showing current bids and asks.
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `market_id` | string | *required* | Market ID |
-| `outcome_index` | number | 0 | Outcome index (0 = Yes) |
+| Parameter       | Type   | Default    | Description             |
+| --------------- | ------ | ---------- | ----------------------- |
+| `market_id`     | string | _required_ | Market ID               |
+| `outcome_index` | number | 0          | Outcome index (0 = Yes) |
 
-**Example:** *"Show me the order book for market 0x..."*
+**Example:** _"Show me the order book for market 0x..."_
 
 ## 💡 Example Queries
 
 Once configured, you can ask your AI assistant:
 
-- *"Show me politics markets with more than 50% odds for Yes"*
-- *"What are the trending crypto markets right now?"*
-- *"Search for Trump prediction markets"*
-- *"Get the price history for the Bitcoin $100k market"*
-- *"List all sports betting markets"*
-- *"What's the order book depth for the presidential election market?"*
-
-## 📚 Workflows & Examples
-
-### Advanced Workflows
-
-See [docs/WORKFLOWS.md](docs/WORKFLOWS.md) for powerful multi-source workflows:
-
-| Workflow | Description |
-|----------|-------------|
-| **Truth Terminal** | Validate news headlines against market odds |
-| **Crypto Alpha Scanner** | Correlate prediction markets with crypto prices |
-| **Liquidity Sniper** | Find markets with wide spreads |
-| **Paper Trading** | Simulate positions without real money |
-| **Governance Watchdog** | Monitor regulatory/policy markets |
-
-### Demo Script
-
-Run the market analyst demo to see the API in action:
-
-```bash
-# Install tsx if needed
-npm install -D tsx
-
-# Run the demo
-npx tsx examples/market_analyst.ts
-```
-
-The demo will:
-1. Fetch the top 10 trending markets by 24h volume
-2. Search for and analyze a specific event
-3. Show order book depth for a market
-4. Execute a simulated paper trade
+- _"Show me politics markets with more than 50% odds for Yes"_
+- _"What are the trending crypto markets right now?"_
+- _"Search for Trump prediction markets"_
+- _"Get the price history for the Bitcoin $100k market"_
+- _"List all sports betting markets"_
+- _"What's the order book depth for the presidential election market?"_
 
 ### Prompt Templates
 
@@ -300,6 +270,7 @@ npm run client
 ## 📄 API Sources
 
 This server uses the following Polymarket APIs:
+
 - **Gamma API** (`gamma-api.polymarket.com`) — Market and event data
 - **CLOB API** (`clob.polymarket.com`) — Order books and price history
 
